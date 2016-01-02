@@ -1,0 +1,31 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "coliver650@gmail.com",
+    "longName": "I_WATCH_FACE",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "fonts/DroidSerif-Bold.ttf",
+                "name": "DROID_SERIF_BOLD_42",
+                "targetPlatforms": null,
+                "type": "font"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "I_WATCH_FACE",
+    "targetPlatforms": [
+        "aplite",
+        "basalt",
+        "chalk"
+    ],
+    "uuid": "1dc677de-24bd-4ecb-8a7b-9e46fa381c87",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
