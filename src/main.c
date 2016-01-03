@@ -1,8 +1,8 @@
 #include <pebble.h>
 
 static Window *s_main_window;
-static TextLayer *s_time_layer;
-static GFont s_time_font;
+static TextLayer *s_time_layer, *s_date_layer;
+static GFont s_time_font, s_date_font;
 
 static void update_time() {
   // build a tm structure
@@ -10,11 +10,16 @@ static void update_time() {
   struct tm *tick_time = localtime(&temp);
   
   // write the current hours and minutes into a buffer
-  static char s_buffer[8];
-  strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
+  static char time_buffer[8];
+  strftime(time_buffer, sizeof(time_buffer), clock_is_24h_style() ? "%H:%M" : "%I:%M", tick_time);
   
-  // display the time on the text layer
-  text_layer_set_text(s_time_layer, s_buffer);
+  // write the current date into a buffer
+  static char date_buffer[16];
+  strftime(date_buffer, sizeof(date_buffer), "%m - %d", tick_time);
+  
+  // display the time and date on the text layers
+  text_layer_set_text(s_time_layer, time_buffer);
+  text_layer_set_text(s_date_layer, date_buffer);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -26,28 +31,37 @@ static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
   
-  // create the text layer
+  // create the time and date text layers
   s_time_layer = text_layer_create(GRect(0, PBL_IF_ROUND_ELSE(58, 52), bounds.size.w, 50));
+  s_date_layer = text_layer_create(GRect(0, 120, 144, 30));
   
-  // create the text font
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DROID_SERIF_BOLD_42));
+  // create the time and date text layer fonts
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DROID_SERIF_BOLD_44));
+  s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DROID_SERIF_BOLD_20));
   
-  // style the text layer
+  // style the time and date text layers
   text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorBlack);
+  text_layer_set_background_color(s_date_layer, GColorClear);
+  text_layer_set_text_color(s_time_layer, GColorWhite);
+  text_layer_set_text_color(s_date_layer, GColorWhite);
   text_layer_set_font(s_time_layer, s_time_font);
+  text_layer_set_font(s_date_layer, s_date_font);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
+  text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
   
-  // add the text layer as a child layer to the window's root layer
+  // add the time and date text layers as children layers to the window's root layer
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+  layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
 }
 
 static void main_window_unload(Window *window) {
-  // destroy the text layer
+  // destroy the text and date layers
   text_layer_destroy(s_time_layer);
+  text_layer_destroy(s_date_layer);
   
-  // unload the font
+  // unload the fonts
   fonts_unload_custom_font(s_time_font);
+  fonts_unload_custom_font(s_date_font);
 }
 
 static void init() {
@@ -61,7 +75,7 @@ static void init() {
   });
   
   // style the window
-  window_set_background_color(s_main_window, GColorWhite);
+  window_set_background_color(s_main_window, GColorRed);
   
   // register with the tick timer service
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
