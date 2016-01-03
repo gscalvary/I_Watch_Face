@@ -10,13 +10,13 @@
         "media": [
             {
                 "file": "fonts/DroidSerif-Bold.ttf",
-                "name": "DROID_SERIF_BOLD_20",
+                "name": "DROID_SERIF_BOLD_22",
                 "targetPlatforms": null,
                 "type": "font"
             },
             {
                 "file": "fonts/DroidSerif-Bold.ttf",
-                "name": "DROID_SERIF_BOLD_44",
+                "name": "DROID_SERIF_BOLD_46",
                 "targetPlatforms": null,
                 "type": "font"
             }
