@@ -2,6 +2,8 @@
 
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer;
+static GColor s_background_color;
+static GColor s_element_color;
 static GFont s_time_font, s_date_font;
 static int s_battery_level;
 static Layer *s_battery_layer;
@@ -31,13 +33,24 @@ static void update_battery(Layer *layer, GContext *ctx) {
   // calculate the width of the remaining battery bar
   int width = (int)(float)(((float)s_battery_level / 100.0F) * bounds.size.w);
   
+  // calculate the remaining battery bar starting x-coordinate
+  int xCoord = (bounds.size.w - width) / 2;
+  
+  // set the battery meter color
+  GColor batteryMeterColor;
+  if(width <= 20) {
+    batteryMeterColor = GColorRed;
+  } else {
+    batteryMeterColor = s_element_color;
+  }
+  
   // draw the battery level background
-  graphics_context_set_fill_color(ctx, GColorOxfordBlue);
+  graphics_context_set_fill_color(ctx, s_background_color);
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
   
-  // draw the bar
-  graphics_context_set_fill_color(ctx, GColorWhite);
-  graphics_fill_rect(ctx, GRect(0, 0, width, bounds.size.h), 0, GCornerNone);
+  // draw the battery meter bar
+  graphics_context_set_fill_color(ctx, batteryMeterColor);
+  graphics_fill_rect(ctx, GRect(xCoord, 0, width, bounds.size.h), 0, GCornerNone);
 }
 
 static void battery_callback(BatteryChargeState state) {
@@ -62,14 +75,14 @@ static void main_window_load(Window *window) {
   s_date_layer = text_layer_create(GRect(0, 120, 144, 30));
   
   // create the time and date text layer fonts
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DROID_SERIF_BOLD_46));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DROID_SERIF_BOLD_50));
   s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DROID_SERIF_BOLD_22));
   
   // style the time and date text layers
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_background_color(s_date_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorWhite);
-  text_layer_set_text_color(s_date_layer, GColorWhite);
+  text_layer_set_text_color(s_time_layer, s_element_color);
+  text_layer_set_text_color(s_date_layer, s_element_color);
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_font(s_date_layer, s_date_font);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
@@ -106,8 +119,12 @@ static void init() {
     .unload = main_window_unload
   });
   
+  // set color scheme
+  s_background_color = GColorBlueMoon;
+  s_element_color = GColorWhite;
+  
   // style the window
-  window_set_background_color(s_main_window, GColorOxfordBlue);
+  window_set_background_color(s_main_window, s_background_color);
   
   // register with the tick timer service
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);

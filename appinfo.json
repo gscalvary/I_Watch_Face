@@ -10,13 +10,13 @@
         "media": [
             {
                 "file": "fonts/DroidSerif-Bold.ttf",
-                "name": "DROID_SERIF_BOLD_22",
+                "name": "DROID_SERIF_BOLD_50",
                 "targetPlatforms": null,
                 "type": "font"
             },
             {
                 "file": "fonts/DroidSerif-Bold.ttf",
-                "name": "DROID_SERIF_BOLD_46",
+                "name": "DROID_SERIF_BOLD_22",
                 "targetPlatforms": null,
                 "type": "font"
             }
@@ -30,7 +30,7 @@
         "chalk"
     ],
     "uuid": "1dc677de-24bd-4ecb-8a7b-9e46fa381c87",
-    "versionLabel": "1.0",
+    "versionLabel": "1.1",
     "watchapp": {
         "watchface": true
     }
